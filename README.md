@@ -1,22 +1,20 @@
 # 🛍️ Full Stack E-Commerce Platform (MERN)
 
-A production-ready, scalable e-commerce application built using the MERN stack.  
-Designed with a modular architecture, secure authentication, and optimized frontend performance.
+A production-ready, scalable e-commerce application for Grocery items built using the MERN stack.  
+Designed with a modular architecture, secure authentication, and optimized frontend performance using React.
 
-🔗 **Live Demo (Home Page):** https://e-commerce-fullstack-inx2.vercel.app/  
-🔗 **SignIn Page:** - https://e-commerce-fullstack-inx2.vercel.app/signin/
-🔗 **SignUp Page:** - https://e-commerce-fullstack-inx2.vercel.app/signup/
-🔗 **All Products:** - https://e-commerce-fullstack-inx2.vercel.app/shop/
-🔗 **All Products:** - https://e-commerce-fullstack-inx2.vercel.app/cart/
-🔗 **Admin Page to upload/manage Products:** - https://e-commerce-fullstack-inx2.vercel.app/admin/dashboard
-
-
-🔗 **API Base URL:** https://mern-fullstack-application-1.onrender.com/api/
+- 🔗 **Live Demo (Home Page):** https://e-commerce-fullstack-inx2.vercel.app/  
+- 🔗 **SignIn Page:** - https://e-commerce-fullstack-inx2.vercel.app/signin/
+- 🔗 **SignUp Page:** - https://e-commerce-fullstack-inx2.vercel.app/signup/
+- 🔗 **All Products:** - https://e-commerce-fullstack-inx2.vercel.app/shop/
+- 🔗 **All Products:** - https://e-commerce-fullstack-inx2.vercel.app/cart/
+- 🔗 **Admin Page to upload/manage Products:** - https://e-commerce-fullstack-inx2.vercel.app/admin/dashboard
+- 🔗 **API Base URL:** https://mern-fullstack-application-1.onrender.com/api/
 ---
 
 ## 📌 Project Overview
 
-This project simulates a real-world e-commerce system with authentication, product management, cart flow, and order handling.  
+This project simulates a real-world e-commerce system with authentication, product management, cart and payment flow, and order handling.  
 
 The focus was on:
 
@@ -29,9 +27,9 @@ The focus was on:
 ---
 
 ## 🧠 Architecture
-Client (React) → Express API → MongoDB Atlas
-│ │
-Vercel Render
+Client (React)  →  Express API  →  MongoDB Atlas
+      │                 │
+    Vercel           Render
 
 - Frontend and backend are deployed independently.
 - Environment variables are isolated per service.
@@ -56,7 +54,7 @@ Vercel Render
 - Bcrypt (password hashing)
 
 ### Dev & Deployment
-- GitHub (Version Control)
+- GitHub
 - Render (Backend Hosting)
 - Vercel (Frontend Hosting)
 - MongoDB Atlas (Cloud Database)
@@ -77,6 +75,8 @@ Vercel Render
 - Add to cart functionality
 - Quantity updates
 - Order placement
+- Order History
+- User Account page with edit
 
 ### 🛠️ Admin Capabilities
 - Add / Update / Delete products
@@ -87,19 +87,8 @@ Vercel Render
 ## ⚡ Performance & Engineering Highlights
 
 - Modular folder structure (separated client & server)
-- Centralized API configuration using environment variables
 - Proper CORS configuration
 - Error handling middleware
 - Scalable backend routing structure
 - Reusable React components
 - Clean separation of concerns
-
----
-
-## 🧩 Challenges Solved
-
-- Managing CORS between separate domains
-- Handling JWT authentication across frontend & backend
-- Structuring scalable Express middleware
-- Secure deployment configuration
-- Avoiding environment variable leakage
