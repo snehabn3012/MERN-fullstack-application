@@ -8,14 +8,9 @@ import RelatedProducts from "./RelatedProducts";
 function Product() {
     const [product, setProduct] = useState({});
     const [error, setError] = useState(false);
-    const isInitialMount = useRef(true);
     const { productId } = useParams();
 
     useEffect(() => {
-        // if (isInitialMount.current) {
-        //     isInitialMount.current = false;
-        //     return;
-        // }
         if (productId) {
             getProduct(productId)
                 .then((res) => {
