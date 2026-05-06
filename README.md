@@ -3,12 +3,15 @@
 A production-ready, scalable e-commerce application built using the MERN stack.  
 Designed with a modular architecture, secure authentication, and optimized frontend performance.
 
-🔗 **Live Demo:** https://e-commerce-fullstack-zeta.vercel.app/  
-🔗 **API Base URL:** https://mern-fullstack-application-1.onrender.com/api
-Home page - https://e-commerce-fullstack-zeta.vercel.app/ 
-SignIn Page - 
+🔗 **Live Demo (Home Page):** https://e-commerce-fullstack-inx2.vercel.app/  
+🔗 **SignIn Page:** - https://e-commerce-fullstack-inx2.vercel.app/signin/
+🔗 **SignUp Page:** - https://e-commerce-fullstack-inx2.vercel.app/signup/
+🔗 **All Products:** - https://e-commerce-fullstack-inx2.vercel.app/shop/
+🔗 **All Products:** - https://e-commerce-fullstack-inx2.vercel.app/cart/
+🔗 **Admin Page to upload/manage Products:** - https://e-commerce-fullstack-inx2.vercel.app/admin/dashboard
 
 
+🔗 **API Base URL:** https://mern-fullstack-application-1.onrender.com/api/
 ---
 
 ## 📌 Project Overview
@@ -30,7 +33,6 @@ Client (React) → Express API → MongoDB Atlas
 │ │
 Vercel Render
 
-
 - Frontend and backend are deployed independently.
 - Environment variables are isolated per service.
 - RESTful API structure with JWT-based authentication.
@@ -40,11 +42,10 @@ Vercel Render
 ## 🏗️ Tech Stack
 
 ### Frontend
-- React (Vite / CRA)
+- React
 - React Router
-- Axios
-- Tailwind CSS
 - Context API / State Management
+- Vitest
 
 ### Backend
 - Node.js
@@ -77,7 +78,7 @@ Vercel Render
 - Quantity updates
 - Order placement
 
-### 🛠️ Admin Capabilities (Optional if implemented)
+### 🛠️ Admin Capabilities
 - Add / Update / Delete products
 - Order management
 
@@ -102,14 +103,3 @@ Vercel Render
 - Structuring scalable Express middleware
 - Secure deployment configuration
 - Avoiding environment variable leakage
-
----
-
-## 🎯 What This Project Demonstrates
-
-- Strong frontend architecture
-- Full-stack integration capability
-- REST API design knowledge
-- Authentication & security best practices
-- Production deployment understanding
-- Clean and maintainable code structure
