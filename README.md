@@ -3,7 +3,8 @@
 A production-ready, scalable e-commerce application for Grocery items built using the MERN stack.  
 Designed with a modular architecture, secure authentication, and optimized frontend performance using React.
 
-- 🔗 **Live Demo (Home Page):** https://e-commerce-fullstack-inx2.vercel.app/  
+- 🔗 **Live Demo (Home Page):** https://e-commerce-fullstack-inx2.vercel.app/
+  
 - 🔗 **SignIn Page:** - https://e-commerce-fullstack-inx2.vercel.app/signin/
 - 🔗 **SignUp Page:** - https://e-commerce-fullstack-inx2.vercel.app/signup/
 - 🔗 **All Products:** - https://e-commerce-fullstack-inx2.vercel.app/shop/
