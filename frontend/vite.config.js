@@ -1,5 +1,5 @@
 import { defineConfig, transformWithOxc } from 'vite'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react-oxc'
 
 export default defineConfig({
   test: {
