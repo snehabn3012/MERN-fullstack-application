@@ -68,6 +68,14 @@ function Navbar() {
                         </li>
                     )}
 
+                    {isAdmin && (
+                         <li>
+                        <Link to="/admin/dashboard" onClick={() => setDropdownOpen(false)}>
+                            Admin Dashboard
+                        </Link>
+                        </li>
+                    )}
+
                     <li className="dropdown" ref={dropdownRef}>
                         <button
                             onClick={() => setDropdownOpen(o => !o)}
@@ -87,11 +95,6 @@ function Navbar() {
                                 <Link to="/purchase-history" onClick={() => setDropdownOpen(false)}>
                                     Order History
                                 </Link>
-                                {isAdmin && (
-                                    <Link to="/admin/dashboard" onClick={() => setDropdownOpen(false)}>
-                                        Admin Panel
-                                    </Link>
-                                )}
 
                                 {isAuthenticated ? (
                                     <span

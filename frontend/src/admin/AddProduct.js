@@ -46,13 +46,16 @@ function AddProduct() {
         <Layout>
             <div className="page-content">
                 <div className="admin-form">
-                    <div style={{ marginBottom: '1.5rem' }}>
-                        <Link to="/admin/dashboard" className="text-muted" style={{ fontSize: '0.875rem' }}>
-                            ← Back to Dashboard
+                    <div>
+                        <Link to="/admin/dashboard" className="back-link">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                <path d="M10 7H2M6 3L2 7l4 4" stroke="currentColor" strokeWidth="1.8"
+                                    strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            Back to Dashboard
                         </Link>
-                        <h2 style={{ marginTop: '0.5rem', fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                            Add Product
-                        </h2>
+                        <h2 className="admin-form-title">Add Product</h2>
+                        <p className="admin-form-subtitle">Fill in the details to add a new product to the store.</p>
                     </div>
 
                     {createdProduct && (

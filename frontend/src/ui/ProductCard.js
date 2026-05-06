@@ -45,9 +45,9 @@ const ProductCard = ({ product, showAddToCartButton = true,
     <div className="product-card-body">
       <div className="product-title">{product.name}</div>
 
-      <p className="product-description">
+      {/* <p className="product-description">
         {product.description?.substring(0, 100) || product.description}
-      </p>
+      </p> */}
     </div>
   </Link>
 

@@ -37,7 +37,7 @@ const CarouselCard = ({ product, renderBadge }) => {
           {product.description?.length > 72 ? '…' : ''}
         </p>
         <div className="bs-card-footer">
-          <span className="bs-card-price">${product.price}</span>
+          <span className="bs-card-price">₹ {product.price}</span>
           <button
             className={`bs-card-btn${added ? ' added' : ''}`}
             onClick={handleAdd}

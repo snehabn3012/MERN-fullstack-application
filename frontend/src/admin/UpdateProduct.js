@@ -1,249 +1,200 @@
-import React, { useState, useEffect } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, Navigate, useParams } from "react-router-dom";
 
 import Layout from "../core/Layout";
 import { isAuthenticated } from "../auth";
 import { getProduct } from "../api/product";
-import { getCategories, updateProduct } from "../api/admin"
-import { Input } from "@chakra-ui/react";
+import { getCategories, updateProduct } from "../api/admin";
 
-const UpdateProduct = ({ match }) => {
-    const [values, setValues] = useState({
-        name: "",
-        description: "",
-        price: "",
-        categories: [],
-        category: "",
-        shipping: "",
-        quantity: "",
-        photo: "",
-        loading: false,
-        error: false,
-        createdProduct: "",
-        redirectToProfile: false,
-        formData: ""
-    });
-
+const UpdateProduct = () => {
     const { user, token } = isAuthenticated();
     const { productId } = useParams();
-    const {
-        name,
-        description,
-        price,
-        categories,
-        category,
-        shipping,
-        quantity,
-        loading,
-        error,
-        createdProduct,
-        redirectToProfile,
-        formData
-    } = values;
+    const formData = useRef(new FormData());
 
-    const init = productId => {
-        getProduct(productId).then(data => {
-            if (data.error) {
-                setValues({ ...values, error: data.error });
-            } else {
-                // populate the state
-                setValues({
-                    ...values,
-                    name: data.name,
-                    description: data.description,
-                    price: data.price,
-                    category: data.category._id,
-                    shipping: data.shipping,
-                    quantity: data.quantity,
-                    formData: new FormData()
-                });
-                // load categories
-                initCategories();
-            }
-        });
-    };
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState('');
+    const [updatedName, setUpdatedName] = useState('');
+    const [redirect, setRedirect] = useState(false);
 
-    // load categories and set form data
-    const initCategories = () => {
-        getCategories().then(data => {
-            if (data.error) {
-                setValues({ ...values, error: data.error });
-            } else {
-                setValues({
-                    categories: data,
-                    formData: new FormData()
-                });
-            }
-        });
-    };
+    const [values, setValues] = useState({
+        name: '', description: '', price: '', quantity: '',
+        category: '', shipping: '',
+    });
 
     useEffect(() => {
-        init(productId);
+        formData.current = new FormData();
+
+        Promise.all([
+            getProduct(productId),
+            getCategories(),
+        ]).then(([product, cats]) => {
+            if (product.error) { setError(product.error); return; }
+
+            setValues({
+                name:        product.name        ?? '',
+                description: product.description ?? '',
+                price:       product.price       ?? '',
+                quantity:    product.quantity    ?? '',
+                category:    product.category?._id ?? '',
+                shipping:    String(product.shipping ? 1 : 0),
+            });
+
+            if (!cats.error) setCategories(cats);
+        }).catch(() => setError('Failed to load product data.'))
+          .finally(() => setLoading(false));
     }, [productId]);
 
-    const handleChange = name => event => {
-        const value =
-            name === "photo" ? event.target.files[0] : event.target.value;
-        formData.set(name, value);
-        setValues({ ...values, [name]: value });
+    const handleChange = (field) => (e) => {
+        const value = field === 'photo' ? e.target.files[0] : e.target.value;
+        formData.current.set(field, value);
+        setValues(prev => ({ ...prev, [field]: value }));
     };
 
-    const clickSubmit = event => {
-        event.preventDefault();
-        setValues({ ...values, error: "", loading: true });
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setError('');
+        setSubmitting(true);
 
-        updateProduct(productId, formData).then(
-            data => {
-                if (data.error) {
-                    setValues({ ...values, error: data.error });
-                } else {
-                    setValues({
-                        ...values,
-                        name: "",
-                        description: "",
-                        photo: "",
-                        price: "",
-                        quantity: "",
-                        loading: false,
-                        error: false,
-                        redirectToProfile: true,
-                        createdProduct: data.name
-                    });
-                }
+        updateProduct(productId, formData.current).then(data => {
+            if (data.error) {
+                setError(data.error);
+            } else {
+                setUpdatedName(data.name);
+                setTimeout(() => setRedirect(true), 1200);
             }
-        );
+        }).catch(() => setError('Update failed. Please try again.'))
+          .finally(() => setSubmitting(false));
     };
 
-    const newPostForm = () => (
-        <form className="mb-3" onSubmit={clickSubmit}>
-            <h4>Post Photo</h4>
-            <div className="form-group">
-                <label className="btn btn-secondary">
-                    <Input
-                        onChange={handleChange("photo")}
-                        type="file"
-                        name="photo"
-                        accept="image/*"
-                    />
-                </label>
-            </div>
-
-            <div className="form-group">
-                <label className="text-muted">Name</label>
-                <input
-                    onChange={handleChange("name")}
-                    type="text"
-                    className="form-control"
-                    value={name}
-                />
-            </div>
-
-            <div className="form-group">
-                <label className="text-muted">Description</label>
-                <textarea
-                    onChange={handleChange("description")}
-                    className="form-control"
-                    value={description}
-                />
-            </div>
-
-            <div className="form-group">
-                <label className="text-muted">Price</label>
-                <input
-                    onChange={handleChange("price")}
-                    type="number"
-                    className="form-control"
-                    value={price}
-                />
-            </div>
-
-            <div className="form-group">
-                <label className="text-muted">Category</label>
-                <select
-                    onChange={handleChange("category")}
-                    className="form-control"
-                >
-                    <option>Please select</option>
-                    {categories &&
-                        categories.map((c, i) => (
-                            <option key={i} value={c._id}>
-                                {c.name}
-                            </option>
-                        ))}
-                </select>
-            </div>
-
-            <div className="form-group">
-                <label className="text-muted">Shipping</label>
-                <select
-                    onChange={handleChange("shipping")}
-                    className="form-control"
-                >
-                    <option>Please select</option>
-                    <option value="0">No</option>
-                    <option value="1">Yes</option>
-                </select>
-            </div>
-
-            <div className="form-group">
-                <label className="text-muted">Quantity</label>
-                <input
-                    onChange={handleChange("quantity")}
-                    type="number"
-                    className="form-control"
-                    value={quantity}
-                />
-            </div>
-
-            <button className="btn btn-outline-primary">Update Product</button>
-        </form>
-    );
-
-    const showError = () => (
-        <div
-            className="alert alert-danger"
-            style={{ display: error ? "" : "none" }}
-        >
-            {error}
-        </div>
-    );
-
-    const showSuccess = () => (
-        <div
-            className="alert alert-info"
-            style={{ display: createdProduct ? "" : "none" }}
-        >
-            <h2>{`${createdProduct}`} is updated!</h2>
-        </div>
-    );
-
-    const showLoading = () =>
-        loading && (
-            <div className="alert alert-success">
-                <h2>Loading...</h2>
-            </div>
-        );
-
-    const redirectUser = () => {
-        if (redirectToProfile) {
-            if (!error) {
-                return <Navigate to="/" />;
-            }
-        }
-    };
+    if (redirect) return <Navigate to="/admin/products" />;
 
     return (
-        <Layout
-            title="Add a new product"
-            description={`G'day ${user.name}, ready to add a new product?`}
-        >
-            <div className="row">
-                <div className="col-md-8 offset-md-2">
-                    {showLoading()}
-                    {showSuccess()}
-                    {showError()}
-                    {newPostForm()}
-                    {redirectUser()}
+        <Layout>
+            <div className="page-content">
+                <div className="admin-form">
+
+                    {/* ── Header ── */}
+                    <div>
+                        <Link to="/admin/products" className="back-link">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                <path d="M10 7H2M6 3L2 7l4 4" stroke="currentColor" strokeWidth="1.8"
+                                    strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            Manage Products
+                        </Link>
+                        <h2 className="admin-form-title">Update Product</h2>
+                        <p className="admin-form-subtitle">
+                            Edit product details below. Changes take effect immediately.
+                        </p>
+                    </div>
+
+                    {/* ── Feedback ── */}
+                    {updatedName && (
+                        <div className="alert alert-success">
+                            <strong>{updatedName}</strong> updated successfully! Redirecting…
+                        </div>
+                    )}
+                    {error && <div className="alert alert-danger">{error}</div>}
+                    {loading && <div className="alert alert-info">Loading product data…</div>}
+
+                    {/* ── Form ── */}
+                    {!loading && (
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label className="form-label">Product Photo</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleChange('photo')}
+                                    className="form-control"
+                                />
+                            </div>
+
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label className="form-label">Name</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={values.name}
+                                        onChange={handleChange('name')}
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Price (₹)</label>
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={values.price}
+                                        onChange={handleChange('price')}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Description</label>
+                                <textarea
+                                    className="form-control"
+                                    value={values.description}
+                                    onChange={handleChange('description')}
+                                    rows={4}
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label className="form-label">Category</label>
+                                    <select
+                                        className="form-control"
+                                        value={values.category}
+                                        onChange={handleChange('category')}
+                                    >
+                                        <option value="">Please select</option>
+                                        {categories.map((c) => (
+                                            <option key={c._id} value={c._id}>{c.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Quantity</label>
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={values.quantity}
+                                        onChange={handleChange('quantity')}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Shipping</label>
+                                <select
+                                    className="form-control"
+                                    value={values.shipping}
+                                    onChange={handleChange('shipping')}
+                                >
+                                    <option value="">Please select</option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="btn-primary btn-lg"
+                                disabled={submitting}
+                            >
+                                {submitting ? 'Saving changes…' : 'Save Changes'}
+                            </button>
+                        </form>
+                    )}
+
                 </div>
             </div>
         </Layout>

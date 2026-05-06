@@ -28,7 +28,7 @@ const ManageProducts = () => {
                 <div className="admin-topbar">
                     <h2 className="admin-page-title">Manage Products</h2>
                     <div className="admin-actions">
-                        <Link to="/admin/product/create" className="btn-primary">+ Add Product</Link>
+                        <Link to="/create/product" className="btn-primary">+ Add Product</Link>
                     </div>
                 </div>
 

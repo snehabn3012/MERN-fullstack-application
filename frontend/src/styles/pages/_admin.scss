@@ -175,3 +175,241 @@
   flex-wrap: wrap;
   margin-bottom: 1rem;
 }
+
+// ─── Back link ────────────────────────────────
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+
+  &:hover { color: var(--text-primary); text-decoration: none; }
+}
+
+// ─── Admin form heading ───────────────────────
+.admin-form-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0.375rem 0 0;
+}
+
+.admin-form-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0.25rem 0 0;
+}
+
+// ─── Admin page content wrapper ───────────────
+.admin-content {
+  @include container;
+  padding-block: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+// ─── Admin section label ──────────────────────
+.admin-section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+// ─── Dashboard profile header ─────────────────
+.admin-dash-header {
+  @include surface;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.5rem 2rem;
+  flex-wrap: wrap;
+
+  .admin-avatar {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 50%;
+    background: var(--brand-primary-light);
+    color: var(--brand-primary);
+    font-size: 1.25rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 2px solid var(--brand-primary);
+  }
+
+  .admin-meta {
+    flex: 1;
+    min-width: 0;
+
+    .admin-name {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .admin-email {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .admin-role-badge {
+    padding: 0.3rem 0.875rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    background: var(--badge-success-bg);
+    color: var(--badge-success-text);
+    flex-shrink: 0;
+  }
+}
+
+// ─── Dashboard action cards grid ──────────────
+.admin-dash-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+
+  @include sm { grid-template-columns: repeat(2, 1fr); }
+  @include lg { grid-template-columns: repeat(3, 1fr); }
+}
+
+.admin-dash-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-top: 3px solid var(--card-accent, var(--brand-primary));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .dash-card-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--card-accent, var(--brand-primary)) 12%, transparent);
+    color: var(--card-accent, var(--brand-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .dash-card-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .dash-card-desc {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .dash-card-cta {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--card-accent, var(--brand-primary));
+    padding-top: 0.625rem;
+    border-top: 1px solid var(--border-light);
+
+    svg { transition: transform var(--transition-fast); }
+  }
+
+  &:hover .dash-card-cta svg {
+    transform: translateX(4px);
+  }
+}
+
+// ─── Status badges for orders ─────────────────
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.625rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+
+  &-neutral  { background: var(--badge-bg);          color: var(--badge-text); }
+  &-warning  { background: var(--badge-warn-bg);      color: var(--badge-warn-text); }
+  &-info     { background: var(--brand-primary-light); color: var(--brand-primary); }
+  &-success  { background: var(--badge-success-bg);   color: var(--badge-success-text); }
+  &-danger   { background: var(--badge-danger-bg);    color: var(--badge-danger-text); }
+}
+
+// ─── Order product mini-list ──────────────────
+.order-product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+
+  .order-product-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+
+    .op-name { font-weight: 600; color: var(--text-primary); }
+    .op-qty  { color: var(--text-muted); }
+  }
+}
+
+// ─── Order status select ──────────────────────
+.status-select {
+  appearance: none;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.8125rem;
+  padding: 0.35rem 2rem 0.35rem 0.625rem;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%239ca3af' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+
+  &:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: var(--input-shadow-focus);
+  }
+}

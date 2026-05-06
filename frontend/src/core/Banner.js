@@ -108,9 +108,6 @@ const Banner = () => (
                 strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>
-          <Link to="/shop" className="hero-btn-ghost">
-            Meet Our Farmers
-          </Link>
         </div>
 
         {/* Trust badges */}

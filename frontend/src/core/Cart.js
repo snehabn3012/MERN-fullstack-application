@@ -40,7 +40,7 @@ const CartItem = ({ product, onUpdate, onRemove }) => {
                 <span className="cart-item-category">
                     {product.category?.name || "Product"}
                 </span>
-                <span className="cart-item-unit-price">₹{product.price} each</span>
+                <span className="cart-item-unit-price">₹ {product.price} each</span>
             </div>
 
             <div className="qty-stepper">

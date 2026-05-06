@@ -1,80 +1,96 @@
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
-
 import { useUserData } from "../hooks/useAuth";
 import Layout from "../core/Layout";
 import { createCategory } from '../api/admin';
 
 function AddCategory() {
     const [name, setName] = useState('');
-    const [error, setError] = useState(false);
-    const [success, setSuccess] = useState(false);
-
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const { user, token } = useUserData();
 
-    const clickSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         setError('');
-        setSuccess(false);
+        setSuccess('');
+        setLoading(true);
 
-        // make API Call
         createCategory(user._id, token, { name })
             .then((data) => {
                 if (data.error) {
                     setError(data.error);
                 } else {
+                    setSuccess(`Category "${name}" created successfully!`);
                     setName('');
-                    setError('');
-                    setSuccess(true);
                 }
             })
-    }
-
-    const handleChange = (e) => {
-        setError('');
-        setName(e.target.value);
-    }
-
-    const showSuccess = () => {
-        if (success) {
-
-            return <h3>Successfully created!</h3>
-        }
-    }
-
-    const showError = () => {
-        if (error) {
-            return <h3>{error}</h3>
-        }
-    }
-
-    const goBack = () => (
-        <div>
-            <Link to="/admin/dashboard">Back to Admin Dashboard</Link>
-        </div>
-    )
-
-    const newCategoryForm = () => (
-        <form onSubmit={clickSubmit}>
-            <div>
-                <label className="">Name</label>
-                <input type="text" className="" onChange={handleChange} value={name} />
-            </div>
-            <button type="submit">Create Category</button>
-        </form>
-    )
-
-    console.log("user", user, token);
+            .catch(() => setError('Failed to create category. Please try again.'))
+            .finally(() => setLoading(false));
+    };
 
     return (
         <Layout>
-            {goBack()}
-            {showSuccess()}
-            {showError()}
-            {newCategoryForm()}
+            <div className="page-content">
+                <div className="admin-form">
+
+                    {/* ── Header ── */}
+                    <div>
+                        <Link to="/admin/dashboard" className="back-link">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                <path d="M10 7H2M6 3L2 7l4 4" stroke="currentColor" strokeWidth="1.8"
+                                    strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            Back to Dashboard
+                        </Link>
+                        <h2 className="admin-form-title">Create Category</h2>
+                        <p className="admin-form-subtitle">
+                            Add a new category to organise your products.
+                        </p>
+                    </div>
+
+                    {/* ── Feedback ── */}
+                    {success && (
+                        <div className="alert alert-success">
+                            <strong>Done!</strong> {success}
+                        </div>
+                    )}
+                    {error && (
+                        <div className="alert alert-danger">{error}</div>
+                    )}
+
+                    {/* ── Form ── */}
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="category-name">
+                                Category Name
+                            </label>
+                            <input
+                                id="category-name"
+                                type="text"
+                                className="form-control"
+                                placeholder="e.g. Vegetables, Fruits, Dairy…"
+                                value={name}
+                                onChange={(e) => { setError(''); setName(e.target.value); }}
+                                required
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="btn-primary btn-lg"
+                            disabled={loading || !name.trim()}
+                        >
+                            {loading ? 'Creating…' : 'Create Category'}
+                        </button>
+                    </form>
+
+                </div>
+            </div>
         </Layout>
-    )
+    );
 }
 
 export default AddCategory;
