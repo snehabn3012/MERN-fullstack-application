@@ -12,10 +12,10 @@ function Product() {
     const { productId } = useParams();
 
     useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-            return;
-        }
+        // if (isInitialMount.current) {
+        //     isInitialMount.current = false;
+        //     return;
+        // }
         if (productId) {
             getProduct(productId)
                 .then((res) => {
