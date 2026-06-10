@@ -235,7 +235,8 @@ exports.photo = (req, res, next) => {
 exports.listSearch = (req, res) => {
     if (!req.query.search) return res.json([]);
 
-    const query = { name: { $regex: req.query.search, $options: 'i' } };
+    const escaped = req.query.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const query = { name: { $regex: escaped, $options: 'i' } };
     if (req.query.category && req.query.category !== 'All') {
         query.category = req.query.category;
     }

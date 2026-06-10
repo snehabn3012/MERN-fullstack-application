@@ -21,9 +21,10 @@ exports.read = (req, res) => {
 }
 
 exports.update = (req, res) => {
+    const { name, about } = req.body;
     const userUpdatePromise = User.findByIdAndUpdate(
         { _id: req.profile._id },
-        { $set: req.body },
+        { $set: { name, about } },
         { new: true }
     );
 
