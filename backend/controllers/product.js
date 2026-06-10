@@ -44,6 +44,20 @@ exports.create = (req, res) => {
             if (!name || !description || !price || !category || !quantity || !shipping) {
                 return res.status(400).json({ error: 'All fields are required' });
             }
+            if (name.trim().length > 100) {
+                return res.status(400).json({ error: 'Name must be 100 characters or less' });
+            }
+            if (description.trim().length > 2000) {
+                return res.status(400).json({ error: 'Description must be 2000 characters or less' });
+            }
+            const priceNum = parseFloat(price);
+            if (isNaN(priceNum) || priceNum < 0) {
+                return res.status(400).json({ error: 'Price must be a positive number' });
+            }
+            const quantityNum = parseInt(quantity);
+            if (isNaN(quantityNum) || quantityNum < 0) {
+                return res.status(400).json({ error: 'Quantity must be a non-negative integer' });
+            }
 
             try {
                 const createdProduct = await Product.create(_fields);
@@ -94,6 +108,20 @@ exports.update = async (req, res) => {
             const { name, description, price, category, quantity, shipping } = _fields;
             if (!name || !description || !price || !category || !quantity || !shipping) {
                 return res.status(400).json({ error: 'All fields are required' });
+            }
+            if (name.trim().length > 100) {
+                return res.status(400).json({ error: 'Name must be 100 characters or less' });
+            }
+            if (description.trim().length > 2000) {
+                return res.status(400).json({ error: 'Description must be 2000 characters or less' });
+            }
+            const priceNum = parseFloat(price);
+            if (isNaN(priceNum) || priceNum < 0) {
+                return res.status(400).json({ error: 'Price must be a positive number' });
+            }
+            const quantityNum = parseInt(quantity);
+            if (isNaN(quantityNum) || quantityNum < 0) {
+                return res.status(400).json({ error: 'Quantity must be a non-negative integer' });
             }
 
             let product = req.product;
