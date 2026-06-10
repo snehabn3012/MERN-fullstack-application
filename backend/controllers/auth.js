@@ -52,7 +52,7 @@ exports.signin = async (req, res) => {
             });
         }
 
-        const token = jwtToken.sign({ _id: user._id }, process.env.JWT_SECRET);
+        const token = jwtToken.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
         res.cookie('t', token, { expire: new Date() + 9999 });
 
         const { _id, name, role } = user;
