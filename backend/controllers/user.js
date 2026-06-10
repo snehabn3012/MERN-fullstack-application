@@ -2,28 +2,28 @@ const User = require('../models/user');
 const { Order } = require('../models/order');
 
 exports.userById = async (req, res, next, id) => {
-    const user = await User.findById(id).exec();
-    if (!user) {
-        return res.status(400).json({
-            error: 'User not found'
-        })
+    try {
+        const user = await User.findById(id).exec();
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        req.profile = user;
+        next();
+    } catch (err) {
+        return res.status(400).json({ error: 'Invalid user ID' });
     }
-
-    req.profile = user;
-    next();
-
 }
 
 exports.read = (req, res) => {
-    req.profile.hashed_password = undefined
-    req.profile.salt = undefined
+    req.profile.hashed_password = undefined;
     return res.json(req.profile);
 }
 
 exports.update = (req, res) => {
+    const { name, about } = req.body;
     const userUpdatePromise = User.findByIdAndUpdate(
         { _id: req.profile._id },
-        { $set: req.body },
+        { $set: { name, about } },
         { new: true }
     );
 

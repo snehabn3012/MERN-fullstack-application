@@ -1,149 +1,79 @@
 import { API } from '../utils/config';
 import { isAuthenticated } from "../auth";
 
-const authData = isAuthenticated();
-const userId = authData?.user?._id;
-const token = authData?.token;
-
-export const createCategory = (userId, token, category) => {
+export const createCategory = (userId, _token, category) => {
     return fetch(`${API}/category/create/${userId}`, {
         method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            "Content-Type": 'application/json',
-            Authorization: `Bearer ${token}`
-        },
+        credentials: 'include',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify(category)
-    })
-        .then((response) => {
-            return response.json();
-        })
-        .catch((err) => {
-            console.log('err:', err);
-        });
+    }).then(r => r.json()).catch(err => console.log(err));
 }
 
-export const createProduct = (userId, token, product) => {
+export const createProduct = (userId, _token, product) => {
     return fetch(`${API}/product/create/${userId}`, {
         method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            Authorization: `Bearer ${token}`
-        },
+        credentials: 'include',
+        headers: { Accept: 'application/json' },
         body: product
-    }).then((response) => {
-        return response.json();
-    }).catch((err) => {
-        console.log('err:', err);
-    });
+    }).then(r => r.json()).catch(err => console.log(err));
 }
 
 export const getCategories = () => {
     return fetch(`${API}/category/all`, {
         method: 'GET',
-        headers: {
-            Accept: 'application/json',
-            "Content-Type": 'application/json',
-        },
-    }).then((response) => {
-        return response.json();
-    }).catch((err) => {
-        console.log('err:', err);
-    });
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
+    }).then(r => r.json()).catch(err => console.log(err));
 }
 
 export const listOrders = () => {
-    return fetch(`${API}/order/list/${userId}`, {
+    const { user } = isAuthenticated();
+    return fetch(`${API}/order/list/${user._id}`, {
         method: 'GET',
-        headers: {
-            Accept: 'application/json',
-            "Content-Type": 'application/json',
-            Authorization: `Bearer ${token}`
-
-        },
-    }).then((response) => {
-        return response.json();
-    }).catch((err) => {
-        console.log('err:', err);
-    });
+        credentials: 'include',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
+    }).then(r => r.json()).catch(err => console.log(err));
 }
 
 export const getStatusValues = () => {
-    return fetch(`${API}/order/status-values/${userId}`, {
+    const { user } = isAuthenticated();
+    return fetch(`${API}/order/status-values/${user._id}`, {
         method: 'GET',
-        headers: {
-            Accept: 'application/json',
-            "Content-Type": 'application/json',
-            Authorization: `Bearer ${token}`
-
-        },
-    }).then((response) => {
-        return response.json();
-    }).catch((err) => {
-        console.log('err:', err);
-    });
+        credentials: 'include',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
+    }).then(r => r.json()).catch(err => console.log(err));
 }
 
 export const updateOrderStatus = (orderId, status) => {
-    return fetch(`${API}/order/${orderId}/status/${userId}`, {
+    const { user } = isAuthenticated();
+    return fetch(`${API}/order/${orderId}/status/${user._id}`, {
         method: 'PUT',
-        headers: {
-            Accept: 'application/json',
-            "Content-Type": 'application/json',
-            Authorization: `Bearer ${token}`
-        },
+        credentials: 'include',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify({ status, orderId })
-    }).then((response) => {
-        return response.json();
-    }).catch((err) => {
-        console.log('err:', err);
-    });
+    }).then(r => r.json()).catch(err => console.log(err));
 }
 
-/**
- * to perform crud on product
- * get all products
- * get a single product
- * update single product
- * delete single product
- */
-
 export const getProducts = () => {
-    return fetch(`${API}/products?limit=10`, {
-        method: "GET"
-    })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => console.log(err));
+    return fetch(`${API}/products?limit=10`, { method: "GET" })
+        .then(r => r.json()).catch(err => console.log(err));
 };
 
 export const deleteProduct = (productId) => {
-    return fetch(`${API}/product/${productId}/${userId}`, {
+    const { user } = isAuthenticated();
+    return fetch(`${API}/product/${productId}/${user._id}`, {
         method: "DELETE",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        }
-    })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => console.log(err));
+        credentials: 'include',
+        headers: { Accept: "application/json", "Content-Type": "application/json" }
+    }).then(r => r.json()).catch(err => console.log(err));
 };
 
 export const updateProduct = (productId, product) => {
-    return fetch(`${API}/product/${productId}/${userId}`, {
+    const { user } = isAuthenticated();
+    return fetch(`${API}/product/${productId}/${user._id}`, {
         method: "PUT",
-        headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`
-        },
+        credentials: 'include',
+        headers: { Accept: "application/json" },
         body: product
-    })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => console.log(err));
+    }).then(r => r.json()).catch(err => console.log(err));
 };

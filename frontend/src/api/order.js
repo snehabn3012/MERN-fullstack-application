@@ -1,13 +1,10 @@
 import { API } from '../utils/config';
 
-export const createOrder = (userId, token, createOrderData) => {
+export const createOrder = (userId, _token, createOrderData) => {
     return fetch(`${API}/order/create/${userId}`, {
         method: "POST",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
+        credentials: 'include',
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({ order: createOrderData })
     })
         .then(response => {

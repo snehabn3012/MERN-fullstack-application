@@ -5,11 +5,12 @@ const { userById, addOrderToUserHistory } = require('../controllers/user');
 const { requireSignin, isAuth, isAdmin } = require('../controllers/auth');
 const { createOrder, listOrders, getStatusValues, updateOrderStatus } = require('../controllers/order');
 const { decreaseQuantity } = require('../controllers/product');
+const { orderValidator, validate } = require('../validator');
 
 
 router.post(
     '/order/create/:userId',
-    requireSignin, isAuth, addOrderToUserHistory, decreaseQuantity, createOrder
+    requireSignin, isAuth, orderValidator, validate, addOrderToUserHistory, decreaseQuantity, createOrder
 );
 
 router.get('/order/list/:userId', requireSignin, isAuth, isAdmin, listOrders);

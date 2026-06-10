@@ -36,7 +36,10 @@ app.use(compression());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true
+}));
 
 //routes middleware
 app.use("/api", authRoutes);

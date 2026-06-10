@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Razorpay = require('razorpay')
 const crypto = require('crypto')
-
-const secret_key = '1234567890'
+require('dotenv').config();
 const { requireSignin, isAuth } = require('../controllers/auth');
 const { userById } = require('../controllers/user');
 const { createOrder } = require('../controllers/razorpay');
@@ -16,7 +15,7 @@ router.post('/payment-capture', (req, res) => {
 
     // do a validation
 
-    const data = crypto.createHmac('sha256', secret_key)
+    const data = crypto.createHmac('sha256', process.env.RAZORPAY_WEBHOOK_SECRET)
     data.update(JSON.stringify(req.body))
     const digest = data.digest('hex')
 

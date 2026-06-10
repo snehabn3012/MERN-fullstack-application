@@ -40,7 +40,8 @@ exports.getStatusValues = (req, res) => {
 exports.updateOrderStatus = (req, res) => {
     Order.updateOne(
         { _id: req.body.orderId },
-        { $set: { status: req.body.status } }
+        { $set: { status: req.body.status } },
+        { runValidators: true }
     )
         .then((order) => res.json(order))
         .catch((err) => res.status(400).json({ error: errorHandler(err) }));

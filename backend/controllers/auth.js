@@ -4,7 +4,6 @@ const jwtToken = require('jsonwebtoken');
 var { expressjwt: jwt } = require("express-jwt");
 
 exports.signup = async (req, res) => {
-    console.log("err", req.boddy);
     try {
         const user = await User.create(req.body);
 
@@ -36,41 +35,35 @@ exports.signup = async (req, res) => {
 }
 
 exports.signin = async (req, res) => {
-    // find user based on email
     const { email, password } = req.body;
-    User.findOne({ email })
-        .then((user) => {
-            console.log("user", user);
-            if (!user) {
-                return res.status(400).json({
-                    err: 'User with that email does not exist. Please signup'
-                })
-            }
-
-            // if user found, make sure email and password match
-            // create authenticate method in user model
-            if (!user.authenticate(password)) {
-                return res.status(401).json({
-                    error: `Email and password doesn't match`
-                });
-            }
-
-            // generate a signed token with user id and secret
-            const token = jwtToken.sign({ _id: user._id }, process.env.JWT_SECRET);
-
-            // persist the token as 't' in cookie with expiry date
-            res.cookie('t', token, { expire: new Date() + 9999 })
-
-            // return response with user and token to frontend client
-            const { _id, name, email, role } = user;
-            return res.json({ token, user: { _id, name, email, role } });
-        })
-        .catch((err) => {
-            console.log("err", err);
+    try {
+        const user = await User.findOne({ email }).select('+hashed_password');
+        if (!user) {
             return res.status(400).json({
-                err: err
-            })
-        })
+                err: 'User with that email does not exist. Please signup'
+            });
+        }
+
+        const isMatch = await user.authenticate(password);
+        if (!isMatch) {
+            return res.status(401).json({
+                error: `Email and password doesn't match`
+            });
+        }
+
+        const token = jwtToken.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        res.cookie('t', token, {
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+        });
+
+        const { _id, name, role } = user;
+        return res.json({ user: { _id, name, email, role } });
+    } catch (err) {
+        return res.status(400).json({ err });
+    }
 }
 
 exports.signout = (req, res) => {
@@ -81,16 +74,11 @@ exports.signout = (req, res) => {
 exports.requireSignin = jwt({
     secret: process.env.JWT_SECRET,
     algorithms: ["HS256"],
-    userProperty: "auth"
+    userProperty: "auth",
+    getToken: (req) => req.cookies?.t ?? null
 })
 
 exports.isAuth = (req, res, next) => {
-    console.log("is Auth ===> req.profile", req.profile);
-    console.log("is Auth ===> req.auth", req.auth);
-    console.log("is Auth ===> req.profile._id", req.profile._id);
-    console.log("is Auth ===> req.auth._id", req.auth._id);
-
-
     let user = req.profile && req.auth
         && req.profile._id.toString() === req.auth._id;
 

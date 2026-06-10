@@ -31,14 +31,11 @@ import { API } from '../utils/config';
 //         .catch(err => console.log(err));
 // };
 
-export const processPayment = (userId, token, createOrderData) => {
+export const processPayment = (userId, _token, createOrderData) => {
     return fetch(`${API}/payment/create/${userId}`, {
         method: "POST",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
+        credentials: 'include',
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
         body: JSON.stringify(createOrderData)
     })
         .then(response => {
