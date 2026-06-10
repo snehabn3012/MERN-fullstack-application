@@ -36,41 +36,30 @@ exports.signup = async (req, res) => {
 }
 
 exports.signin = async (req, res) => {
-    // find user based on email
     const { email, password } = req.body;
-    User.findOne({ email })
-        .then((user) => {
-            console.log("user", user);
-            if (!user) {
-                return res.status(400).json({
-                    err: 'User with that email does not exist. Please signup'
-                })
-            }
-
-            // if user found, make sure email and password match
-            // create authenticate method in user model
-            if (!user.authenticate(password)) {
-                return res.status(401).json({
-                    error: `Email and password doesn't match`
-                });
-            }
-
-            // generate a signed token with user id and secret
-            const token = jwtToken.sign({ _id: user._id }, process.env.JWT_SECRET);
-
-            // persist the token as 't' in cookie with expiry date
-            res.cookie('t', token, { expire: new Date() + 9999 })
-
-            // return response with user and token to frontend client
-            const { _id, name, email, role } = user;
-            return res.json({ token, user: { _id, name, email, role } });
-        })
-        .catch((err) => {
-            console.log("err", err);
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
             return res.status(400).json({
-                err: err
-            })
-        })
+                err: 'User with that email does not exist. Please signup'
+            });
+        }
+
+        const isMatch = await user.authenticate(password);
+        if (!isMatch) {
+            return res.status(401).json({
+                error: `Email and password doesn't match`
+            });
+        }
+
+        const token = jwtToken.sign({ _id: user._id }, process.env.JWT_SECRET);
+        res.cookie('t', token, { expire: new Date() + 9999 });
+
+        const { _id, name, role } = user;
+        return res.json({ token, user: { _id, name, email, role } });
+    } catch (err) {
+        return res.status(400).json({ err });
+    }
 }
 
 exports.signout = (req, res) => {
