@@ -36,7 +36,8 @@ export const signInAPI = (user) => {
 
 export const authenticate = (data, next) => {
     if (typeof window !== 'undefined') {
-        localStorage.setItem('jwt', JSON.stringify(data));
+        // Store only non-sensitive user info — the token lives in the httpOnly cookie
+        localStorage.setItem('jwt', JSON.stringify({ user: data.user }));
         next();
     }
 }

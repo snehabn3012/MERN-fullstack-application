@@ -56,11 +56,11 @@ exports.signin = async (req, res) => {
             expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict'
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
         });
 
         const { _id, name, role } = user;
-        return res.json({ token, user: { _id, name, email, role } });
+        return res.json({ user: { _id, name, email, role } });
     } catch (err) {
         return res.status(400).json({ err });
     }
@@ -74,7 +74,8 @@ exports.signout = (req, res) => {
 exports.requireSignin = jwt({
     secret: process.env.JWT_SECRET,
     algorithms: ["HS256"],
-    userProperty: "auth"
+    userProperty: "auth",
+    getToken: (req) => req.cookies?.t ?? null
 })
 
 exports.isAuth = (req, res, next) => {

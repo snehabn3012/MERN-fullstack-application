@@ -1,37 +1,23 @@
 import { API } from '../utils/config';
 import { isAuthenticated } from "../auth";
 
-const authData = isAuthenticated();
-const userId = authData?.user?._id;
-const token = authData?.token;
-
-const headers = {
-    Accept: 'application/json',
-    "Content-Type": 'application/json',
-    Authorization: `Bearer ${token}`
-};
-
 export const getUser = () => {
-    return fetch(`${API}/user/${userId}`, {
+    const { user } = isAuthenticated();
+    return fetch(`${API}/user/${user._id}`, {
         method: 'GET',
-        headers
-    }).then((response) => {
-        return response.json();
-    }).catch((err) => {
-        console.log('err:', err);
-    });
+        credentials: 'include',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
+    }).then(r => r.json()).catch(err => console.log(err));
 }
 
-export const update = (user) => {
-    return fetch(`${API}/user/${userId}`, {
+export const update = (userData) => {
+    const { user } = isAuthenticated();
+    return fetch(`${API}/user/${user._id}`, {
         method: "PUT",
-        headers,
-        body: JSON.stringify(user)
-    })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => console.log(err));
+        credentials: 'include',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+    }).then(r => r.json()).catch(err => console.log(err));
 };
 
 export const updateUser = (user, next) => {
@@ -46,16 +32,10 @@ export const updateUser = (user, next) => {
 };
 
 export const getPurchaseHistory = () => {
-    return fetch(`${API}/orders/by/user/${userId}`, {
+    const { user } = isAuthenticated();
+    return fetch(`${API}/orders/by/user/${user._id}`, {
         method: "GET",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        }
-    })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => console.log(err));
+        credentials: 'include',
+        headers: { Accept: "application/json", "Content-Type": "application/json" }
+    }).then(r => r.json()).catch(err => console.log(err));
 };
